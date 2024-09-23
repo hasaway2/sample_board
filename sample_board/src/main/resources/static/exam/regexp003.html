@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<title>입력제한</title>
+</head>
+<body>
+	<input type='text' id='username' placeholder='아이디 입력...'><br>
+	<input type='text' id='irum' placeholder='이름 입력...'><br>
+	<script>
+		// #username에는 소문자와 숫자로 입력제한을 걸자 -> 정규식으로 패턴 체크 -> 다른 값이 들어오면 replace
+		$('#username').on("keyup keydown", function() {
+			const pattern = /[^a-z0-9]/g;
+			const value = $(this).val();
+			$(this).val(value.replace(pattern, ''));
+		});
+		
+		// #irum에는 한글로 입력제한을 걸자
+		$('#irum').on("keyup keydown",function() {
+			const pattern = /[^ㄱ-ㅎㅏ-ㅣ가-힣]/;
+			const value = $(this).val();
+			$(this).val(value.replace(pattern, ''));
+		});
+
+	</script>
+</body>
+</html>

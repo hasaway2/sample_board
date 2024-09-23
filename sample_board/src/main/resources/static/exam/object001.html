@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<title>입력제한</title>
+</head>
+<body>
+	<input type='text' id='username' placeholder='아이디 입력...'><br>
+	<script>
+		$('#username').on("blur", function(e) {
+			console.log($(this));
+			// jQuery로 html 요소를 선택한 객체는 0이라는 필드를 가진다 -> html 요소
+			console.log($(this)[0]);
+			
+			const saram = {
+					irum : '홍길동'
+			};
+			console.log(saram.irum);
+			console.log(saram['irum']);
+			
+			console.log(e.target);
+			
+			// 결론 : #username의 입력값
+			$(this).val();
+			e.target.value;
+		});
+	</script>
+</body>
+</html>

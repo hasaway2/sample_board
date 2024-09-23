@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>정규식</title>
+</head>
+<body>
+	<script>
+		let pattern = /[A-Z]/;
+		// 대문자가 있니?
+		console.log(pattern.test("hello"));
+		console.log(pattern.test("Hello"));
+		
+		// 대문자가 2~4글자
+		pattern = /[A-Z]{2,4}/;
+		console.log(pattern.test("Hello"));
+		console.log(pattern.test("YOU"));
+	</script>
+</body>
+</html>

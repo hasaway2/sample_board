@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+	<script>
+		// 비동기 작업을 동기화하기 위해서 jQuery는 자신만의 방법(비표준) : success, error
+		// JS는 표준으로 Promise 객체를 정의
+
+		// 동기작업. sum의 실행결과인 7이 계산된 다음 a에 담긴다
+		const a = sum(3, 4);
+		
+		// 비동기sum이 먼저 끝날 지, =가 먼저 계산될 지 알 수 없다
+		// 비동기함수의 리턴은 Promise로 정의하자(나중에 값이 들어올 것이다...약속어음)
+		// Promise 객체는 then() 메소드를 가진다
+		const b = 비동기sum(3, 4);
+		
+		비동기sum(3, 4).then(function(result) {
+			console.log(result);
+		}).catch(function() {
+			console.log("오류 발생");
+		})
+		
+		비동기sum(3,4).then(result=>console.log(result)).catch(()=>console.log("오류 발생"));
+	</script>
+
+</body>
+</html>

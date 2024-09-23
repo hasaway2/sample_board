@@ -1,0 +1,156 @@
+1. 웹서버와 WAS
+- 웹서버는 http 프로토콜을 이용해 요청을 접수하고 응답하는 서버
+  정적인 자원(html, css, 자바스크립트, 이미지, 동영상)을 서비스한다
+- 프로그램을 실행해 html을 동적으로 생성하는 서버를 WAS(Web Application Server)
+	WAS라고 하는 용어는 자바에서 사용하는 용어
+- 사용자 요청을 웹서버가 접수
+		웹서버가 서비스할 수 있는 정적인 요청인 경우 직접 응답
+		웹서버가 처리 방법을 모르겠다면(/member/join) WAS에 넘긴다
+		WAS가 처리한 다음 html을 생성해서 웹서버로 보낸다
+		웹서버가 수신한 html을 응답 객체로 출력
+
+2. Web Application Server
+- 파이썬은 flask, django, fastapi 등등의 백엔드 서버가 있다
+  자바의 백엔드 서버들을 WAS라고 부른다
+- WAS는 자바 백엔드 프로그램(Servlet)을 실행한다
+
+3. 서블릿(Servlet)
+- 서버에서 실행되는 (요청을 받아서 응답하는) 자바 프로그램 표준
+  class 마이서블릿 implements Servlet {  }
+  
+4. 
+- flask로 백엔드를 만들면 이거 결국 파이썬
+- 스프링으로 백엔드를 만들면 결국은 자바 -> 자바가 서버에서 실행되려면 "Servlet"이어야 한다
+- 스프링과 WAS를 연결해주는 서블릿 : DispatcherServlet
+
+5. DispatcherServlet
+- WAS는 서블릿을 돌려준다 -> WAS는 스프링을 돌리는 것이 아니라 DispatcherServlet을 돌린다
+- DS가 스프링 객체들을 이용해서 작업을 수행한다
+- 모든 스프링 요청은 DS에 의해 접수된다
+
+6. FrontController 패턴
+- 호텔을 생각하자
+  고객의 모든 문의나 항의는 호텔 프론트가 접수 -> 적절한 부서에 통보 -> 처리가 끝나면 프론트가 응답
+- DispatcherServlet가 호텔 프론트의 역할 수행
+- 이렇게 모든 요청과 응답의 통로가 1개인 것을 프론트 컨트롤러 패턴이라고 한다
+
+7. 스프링 프레임워크를 사용하는 이유
+- 의존성 주입
+- AOP(Aspect Oriented Programming)
+	관심(concern) : 개발할 주제
+	횡단 관심 : 여기 저기서 필요한 관심사. 대표적으로 로그인등
+					  코드가 반복해서 나타날 수 있다
+	횡단 관심을 분리해서 따로 작성한 다음 주입한다
+- 선언적 트랜잭션 관리
+	트랜잭션 - 하나의 거래를 구성하는 일련의 (database) 연산
+				 - 물건과 카드을 준다 -> 물건의 가격을 찍는다 -> 카드로 결제한다 -> 카드를 돌려받는다
+				 - 송금 : 내 계좌에서 돈이 빠진다 -> 다른 계좌에 돈이 증가한다
+	트랜잭션은은 분리 불가능하다
+				- commit : 트랜잭션을 저장
+				- rollback : 트랜잭션을 취소
+	예들 들어 게시판 글을 삭제
+				- 삭제할 글의 댓글들을 삭제
+					글을 삭제
+				- 댓글을 삭제하고 글을 삭제하려는데 실패
+						연산을 다시 실행해서 글까지 삭제하고 commit
+						rollback으로 댓글을 살려놓던 지
+- @Transactional을 이용해 선언적 트랜잭션 관리
+	@Transactional
+	public void 송금(String 출금계좌, String 입금계좌, int 금액) {
+		dao.출금(출금계좌, 금액);
+		dao.입금(입금계좌, 금액);
+	}
+- 테스트할 때 @Transactional을 사용할 경우에는 무조건 rollback한다
+  일반 코드에서 사용하면 오류가 발생하면 rollback되다
+	
+=============================================================================
+
+1. 스프링부트는 자동설정된다
+
+2. 데이터베이스와 연결하기
+- mybatis나 driver를 선택하면 연결을 시도
+- Connection 객체 : 데이터베이스와 연결을 담당하는 객체. 매우 비용이 비싸다
+- Connection Pool
+	연결을 미리 만들어 놓고 빌려서 사용 후 반납
+	이렇게 미리 만들어 놓는 것을 Pool이라고 한다 (강사 pool)
+	스프링은 Hikari를 사용
+- proxy 객체
+	자바 reflection(클래스를 풀어헤쳐 개조)을 이용해 기성품 객체를 개조한 객체
+- DataSource
+	연결 객체의 경우 close하면 파괴된다
+	연결을 직접 사용하지 않고 연결에다가 반납기능을 추가한 프록시인 DataSource를 사용
+	
+3. log4jdbc를 서버에서 실행될 sql을 훔쳐보는 라이브러리
+   기본 드라이버는 sql을 서버로 보내기만 하므로, log4jdbc의 DriverSpy라는 프록시 객체를 이용해 sql을 출력
+
+4. 스프링 로깅
+- 로깅 표준 : SLF4j
+- 스프링이 사용하는 SLF4j 구현체 :logback
+- log4jdbc와 logback을 연결하는 설정 : log4jdbc.log4j2.properties
+
+5. 사용자의 정보를 저장하기
+- request : 사용자가 입력한 정보를 저장하는 객체. 작업이 끝나면(redirect) 사라진다
+
+- cookie : 사용자의 정보를 사용자 컴퓨터에 저장(안전X) 							ex)방문했던 링크가 보라색
+- session : 사용자의 정보를 서버 메모리에 저장(사용자마다 자신의 세션)	ex)로그인, 내가 봤던 상품
+- database : 사용자의 정보를 영구 저장. 												ex)구매 기록, 장바구니
+
+6. 응답방식
+- Server Side Rendering : 타임리프를 이용해 html을 생성한 다음 보내준다
+  Client Side Rendering : 작업 결과만 JSON 이나 XML로 보내준다. 화면은 프론트가 알아서....
+- CSR 작업 방식
+	@ResponseBody - CSR 응답 지정
+								- 어노테이션을 적용한 객체를 응답에 때려 박는다(어떻게? JSON으로 바꿔서)
+	ResponseEntity 
+								- @ResponseBody + 상태코드(400, 500, 200, 404...)
+								- 상태코드
+									200	성공
+									400 수신거부
+									500 처리 중 오류
+									404
+									403	권한 없음
+									405 get/post 메소드 틀림
+
+7. ModelAndView에서 뷰페이지 이름을 왜 member/join 이런 식으로 적을까?
+- 스프링은 거대한 한 덩어리가 레고 블록
+- 컨트롤러에서 ModelAndView를 리턴하면 view이름으로 html을 찾는 객체 : ViewResolver
+  뷰 리졸버의 기본 설정에 prefix, postfix가 있다
+  	prefix - /template/
+  	postfix - .html
+  그래서 member/join을 주면 /template/member/join.html을 찾게 된다
+
+7. html에서 id와 name의 차이
+- id는 프론트에서 사용할 이름
+- name은 백으로 넘길 이름 (프론트에서 name사용은 가능)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<title>Insert title here</title>
+</head>
+<body>
+	<button id="send">보내기</button>
+	<script>
+		async function aaa() {
+			try {
+				const result = await $.ajax('/member/username/check?username=summer');
+				console.log(result);
+			} catch(err) {
+				console.log(err.responseText);
+			}
+		}
+		
+		$('#send').click(aaa);
+	</script>
+</body>
+</html>

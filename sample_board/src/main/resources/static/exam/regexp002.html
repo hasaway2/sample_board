@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>정규 표현식</title>
+</head>
+<body>
+	<script>
+	// regular expression -> regexp
+
+	let pattern = /[a-z0-9]{4,6}/;
+	
+	// 소문자가 6자 -> 당연히 통과
+	console.log(pattern.test("spring"));
+	
+	// 소문자와 숫자가 10자 -> 당연히 실패? -> 통과
+	console.log(pattern.test("spring00003"));
+	
+	// 패턴이 시작해서(^) 소문자, 숫자가 4~6글자오고 끝난다($) -> 실패
+	pattern = /^[a-z0-9]{4,6}$/;
+	console.log(pattern.test("spring00003"));
+	</script>
+</body>
+</html>

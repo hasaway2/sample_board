@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<script>
+		function 아이디사용여부확인() { 
+			// ajax 비동기함수라고 하자 
+		}
+		
+		function 이메일사용여부확인() {
+			// ajax 비동기함수라고 하자 
+		}
+		
+		// 회원가입 처리 : 가입버튼을 클릭하면 실행
+		function 회원가입() {
+			// 아이디사용여부확인, 이메일사용여부확인 2개 모두 성공해야 가입처리한다!!!!!
+			아이디사용여부확인().then(()=>{
+				이메일사용여부확인().then(()=>{
+					$('#join-form').submit();
+				}).catch(()=>console.log("이메일 사용중"))
+			}).catch(()=>console.log("아이디 사용중"))
+		}
+			
+		// 그래서 그 다음에 나온 것이 await~async -> 콜백지옥을 해결하자
+		async function 회원가입2() {
+			// await : Promise의 결과가 정해질 때까지 기다려라
+			// try~ catch~ : ajax와 함께 사용할 경우 서버의 응답상태가 200이 아니면 catch가 실행된다
+			try {
+				await 아이디사용여부확인();
+				await 이메일사용여부확인();
+				await aaa();
+				await bbb();
+			} catch(err) {
+				console.log(err);
+			}
+			
+		}
+		
+		
+	</script>
+</body>
+</html>
+
+
+
+
+
+

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<script>
+		const errors = {
+			username : '아이디는 소문자와 숫자 6~10자입니다',
+			password : '비밀번호는 영숫자 6~10자입니다',
+			password2 : '비밀번호가 일치하지 않습니다',
+			email : '이메일을 정확하게 입력하세요'
+		};
+		
+		const arr = ['username', 'password', 'password2', 'email'];
+		
+		for(const name of arr) {
+			console.log(errors[name]);
+		}
+		
+		const check = {
+			username : {
+				emptyMessage: '아이디는 필수입력입니다',
+				patternMessage: '아이디는 소문자와 숫자 6~10자입니다',
+			}, 
+			password : {
+				emptyMessage: '비밀번호는 필수입력입니다',
+				patternMessage: '비밀번호는 영숫자 6~10자입니다'
+			},
+			password2 : {
+				emptyMessage: '비밀번호를 다시 입력하세요',
+				patternMessage: '비밀번호가 일치하지 않습니다'
+			},
+			email: {
+				emptyMessage: '이메일은 필수입력입니다',
+				patternMessage: '이메일을 정확하게 입력하세요'
+			}
+		};
+		
+		for(const name of arr) {
+			console.log(check[name].emptyMessage);
+			console.log(check[name].patternMessage);
+		}
+		
+	</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
