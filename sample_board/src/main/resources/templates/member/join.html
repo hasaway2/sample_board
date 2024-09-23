@@ -50,15 +50,7 @@
 		<footer th:replace="~{/fragment/footer.html}"> </footer>
 	</div>
 	<script>
-		// 1. emptyAndPatternCheck : 입력했는 지 + 패턴을 통과하는 지 체크 -> 적절한 오류메시지를 출력
-		// 	파라미터 : 입력값, 에러메시지출력할 곳, 패턴, empty메시지, 패턴체크실패메시지
-		
-		// 2. password2Check : 입력했는 지 + password와 일치하는 지
-		
-		// 3. usernameCheck
-		//	 - username에 대한 emptyAndPatternCheck를 수행
-		//	 - 성공한 경우 아이디가 사용가능 한 지 ajax 체크
-		
+		// 입력값이 비었는지 + 패턴을 통과하는 지 확인하고 적절한 오류 메시지를 출력
 		function emptyAndPatternCheck(value, $msg, pattern, emptyMessage, patternCheckFailMessage) {
 			$msg.text('');
 			if(value=='') {
@@ -71,6 +63,7 @@
 			return true;
 		}
 	
+		// emptyAndPatternCheck 수행 -> 성공한 경우 아이디가 사용가능한지 확인
 		async function usernameCheck() {
 			const value = $('#username').val();
 			const $msg = $('#username-msg');
@@ -79,7 +72,7 @@
 			if(result==false)
 				return false;
 			try {
-				await $.ajax('/member/username/check');
+				await $.ajax('/member/username/check?username=' + value);
 				return true;
 			} catch(err) {
 				$msg.text('사용중인 아이디입니다');
@@ -117,10 +110,38 @@
 			return true;
 		}
 		
-		// $('#password').on('blur', passwordCheck);
 		$('#username').on('blur', async function() {
 			await usernameCheck();
 		});
+		
+		// 함수 코드가 1줄일때 화살표 함수를 사용하면 간결해진다
+		// !!!! 화살표 함수는 this를 사용할 수 없다
+		$('#password').on("blur", ()=>passwordCheck());
+		$('#password2').on("blur", ()=>password2Check());
+		$('#email').on("blur", ()=>emailCheck());
+		
+		
+		$('#join').click(async function() {
+			const r1 = await usernameCheck();
+			const r2 = passwordCheck();
+			const r3 = password2Check();
+			const r4 = emailCheck();
+			
+			const checkResult = r1 && r2 && r3 && r4;		
+			
+			if(checkResult==true) {
+				alert("회원가입합니다");
+			}
+			
+		})
 	</script>			
 </body>
 </html>
+
+
+
+
+
+
+
+
